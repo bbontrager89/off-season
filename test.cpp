@@ -11,6 +11,6 @@ public void main() {
 
     int z = x + y; 
     cout << "It doesn't matter what numbers you like";
-    doubl a = "7.0"
-    cout << double
+    double a = 7.0;
+    cout << a;
 }
