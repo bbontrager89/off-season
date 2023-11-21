@@ -1,5 +1,21 @@
 # off-season
 Project Code to practice programming offseason for FRC TEAM 9430
 
-Subprojects are allowed in this repository because the owner doesn't want 
-to keep adding the students.
+# Repository Standards
+This section explains the global standard workflows for this repository. TBD via team discussion.
+
+# Subprojects
+The following is a list of subprojects with a brief synopsis 
+
+## Sandbox
+    ./sandbox
+    Contains individual developer sandboxes where each dev has full ownership of their own sandbox.
+
+### Ownership 
+./sandbox   = Brady
+./\*        = Each developer owns their own sandbox.
+
+## TBD
+tbd
+### Ownership 
+./tbd = tbd
