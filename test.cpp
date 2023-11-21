@@ -1,5 +1,5 @@
 #include <iostream>
 
 public void main() {
-    cout << "Hello World!";
+    cout << "What's updog??";
 }
