@@ -8,8 +8,8 @@ This section explains the global standard workflows for this repository. TBD via
 The following is a list of subprojects with a brief synopsis 
 
 ## Sandbox
-    ./sandbox
-    Contains individual developer sandboxes where each dev has full ownership of their own sandbox.
+./sandbox
+Contains individual developer sandboxes where each dev has full ownership of their own sandbox.
 
 ### Ownership 
 ./sandbox   = Brady
