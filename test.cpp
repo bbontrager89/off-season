@@ -8,4 +8,9 @@ public void main() {
     // not my favorite
     int y = 7;
     // favoritier???!?!?
+
+    int z = x + y; 
+    cout << "It doesn't matter what numbers you like";
+    doubl a = "7.0"
+    cout << double
 }
