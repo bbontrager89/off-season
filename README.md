@@ -41,4 +41,4 @@ tbd
 + Example of swerve robot: https://www.youtube.com/watch?v=wc8wh6RsMCs
 + Source (Chief Delphi): https://www.chiefdelphi.com/t/working-c-swerve-drive-super-proud/407116
 
-Programming is 50% reading or writing documentation... The other 40% is meeting with your team to design new code and testing/maintaining existing code,... the last 10% is real keyboard time for anything new. Never be shy to open up a new tab of docs!
+Programming is 50% reading or writing documentation... The other 40% is meeting with your team to design new code and testing/maintaining existing code.... the last 10% is real keyboard time for anything new. Never be shy to open up a new tab of docs!
