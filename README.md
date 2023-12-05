@@ -37,6 +37,7 @@ tbd
 + https://store.ctr-electronics.com/software/
 
 ## Swerve Drive Programming Resources
++ Template MaxSwerve Project Source: https://github.com/REVrobotics/MAXSwerve-Cpp-Template
 + Working CPP code: https://github.com/ahayden04/swerve-falcon
 + Example of swerve robot: https://www.youtube.com/watch?v=wc8wh6RsMCs
 + Source (Chief Delphi): https://www.chiefdelphi.com/t/working-c-swerve-drive-super-proud/407116
