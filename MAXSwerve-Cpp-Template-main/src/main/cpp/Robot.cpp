@@ -4,9 +4,8 @@
 
 #include "Robot.h"
 
-#include <frc/TimedRobot.h>>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
-#include <frc/drive/DifferentialDrive.h>
 
 void Robot::RobotInit() {}
 
@@ -18,9 +17,7 @@ void Robot::RobotInit() {}
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {
-  frc2::CommandScheduler::GetInstance().Run();
-}
+void Robot::RobotPeriodic() { frc2::CommandScheduler::GetInstance().Run(); }
 
 /**
  * This function is called once each time the robot enters Disabled mode. You
@@ -38,18 +35,9 @@ void Robot::DisabledPeriodic() {}
 void Robot::AutonomousInit() {
   m_autonomousCommand = m_container.GetAutonomousCommand();
 
-  if (m_autonomousCommand) {
+  if (m_autonomousCommand != nullptr) {
     m_autonomousCommand->Schedule();
   }
-
-  // workspace
-
-  // define motor
-  // 
-
-
-
-  // end region workspace
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -59,8 +47,9 @@ void Robot::TeleopInit() {
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
   // this line or comment it out.
-  if (m_autonomousCommand) {
+  if (m_autonomousCommand != nullptr) {
     m_autonomousCommand->Cancel();
+    m_autonomousCommand = nullptr;
   }
 }
 
@@ -74,18 +63,6 @@ void Robot::TeleopPeriodic() {}
  */
 void Robot::TestPeriodic() {}
 
-/**
- * This function is called once when the robot is first started up.
- */
-void Robot::SimulationInit() {}
-
-/**
- * This function is called periodically whilst in simulation.
- */
-void Robot::SimulationPeriodic() {}
-
 #ifndef RUNNING_FRC_TESTS
-int main() {
-  return frc::StartRobot<Robot>();
-}
+int main() { return frc::StartRobot<Robot>(); }
 #endif
