@@ -40,7 +40,7 @@ constexpr units::radians_per_second_t kMaxAngularSpeed{2 * std::numbers::pi};
 constexpr double kDirectionSlewRate = 1.2;  // radians per second
 constexpr double kMagnitudeSlewRate = 1.8;  // percent per second (1 = 100%)
 constexpr double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
-
+constexpr rev::CANSparkMaxLowLevel::MotorType kMotorType = rev::CANSparkMaxLowLevel::MotorType::kBrushless;
 // SPARK MAX CAN IDs
 constexpr int kDrivingCanID = 0; // ID of the motor we want to spin
 

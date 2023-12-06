@@ -4,11 +4,22 @@
 
 #include "Robot.h"
 
-#include <frc/TimedRobot.h>>
+#include <frc/TimedRobot.h>
 #include <frc2/command/CommandScheduler.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <rev/CANSparkMax.h>
+#include <rev/CANSparkMaxLowLevel.h>
+#include <frc/XboxController.h>
 
-void Robot::RobotInit() {}
+rev::CANSparkMax *wheelMotor;
+frc::XboxController *xboxController;
+
+void Robot::RobotInit()
+{
+  wheelMotor = new rev::CANSparkMax(DriveConstants::kDrivingCanID, DriveConstants::kMotorType);
+
+  xboxController = new frc::XboxController(OperatorConstants::kDriverControllerPort);
+}
 
 /**
  * This function is called every 20 ms, no matter the mode. Use
@@ -18,7 +29,8 @@ void Robot::RobotInit() {}
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {
+void Robot::RobotPeriodic()
+{
   frc2::CommandScheduler::GetInstance().Run();
 }
 
@@ -35,31 +47,33 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit()
+{
   m_autonomousCommand = m_container.GetAutonomousCommand();
 
-  if (m_autonomousCommand) {
+  if (m_autonomousCommand)
+  {
     m_autonomousCommand->Schedule();
   }
 
   // workspace
 
   // define motor
-  // 
-
-
+  //
 
   // end region workspace
 }
 
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {
+void Robot::TeleopInit()
+{
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
   // this line or comment it out.
-  if (m_autonomousCommand) {
+  if (m_autonomousCommand)
+  {
     m_autonomousCommand->Cancel();
   }
 }
@@ -67,7 +81,22 @@ void Robot::TeleopInit() {
 /**
  * This function is called periodically during operator control.
  */
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic()
+{
+  //frc::XboxController::Axis::kLeftY for testing purposes
+  double leftY = xboxController->GetRawAxis(frc::XboxController::Axis::kLeftY);
+
+  if (leftY > 0.0)
+  {
+    double wheelSpeed = leftY; // Set the wheel speed to the left Y axis value (should be between -1 - 1)
+
+    wheelMotor->Set(wheelSpeed);
+  }
+  else
+  {
+    wheelMotor->Set(0.0);
+  }
+}
 
 /**
  * This function is called periodically during test mode.
@@ -85,7 +114,8 @@ void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main()
+{
   return frc::StartRobot<Robot>();
 }
 #endif
