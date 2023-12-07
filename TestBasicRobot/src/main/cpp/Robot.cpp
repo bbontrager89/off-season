@@ -18,7 +18,7 @@ void Robot::RobotInit()
 {
   wheelMotor = new rev::CANSparkMax(DriveConstants::kDrivingCanID, DriveConstants::kMotorType);
 
-  xboxController = new frc::XboxController(OperatorConstants::kDriverControllerPort);
+  xboxController = new frc::XboxController(OperatorConstants::kDriverControllerCANId);
 }
 
 /**
