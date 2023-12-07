@@ -84,7 +84,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
   //frc::XboxController::Axis::kLeftY for testing purposes
-  double leftY = xboxController->GetRawAxis(frc::XboxController::Axis::kLeftY);
+  double leftY = xboxController->GetLeftY();
 
   if (leftY > 0.0)
   {
