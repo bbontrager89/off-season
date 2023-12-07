@@ -88,7 +88,7 @@ void Robot::TeleopPeriodic()
 
   if (leftY > 0.0)
   {
-    double wheelSpeed = leftY; // Set the wheel speed to the left Y axis value (should be between -1 - 1)
+    double wheelSpeed = leftY / 2; // Set the wheel speed to the left Y axis value (should be between -1 - 1)
 
     wheelMotor->Set(wheelSpeed);
   }
