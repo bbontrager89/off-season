@@ -87,7 +87,7 @@ void Robot::TeleopPeriodic()
   double leftY = xboxController->GetLeftY();
   // Set a threshold between -0.10 and 0.10 where the motor speed will ignore input from the controller
   // -0.1 <= x <= 0.1
-  if (-OperatorConstants::kControllerDeadzoneThreshold <= leftY || leftY <= OperatorConstants::kControllerDeadzoneThreshold) {
+  if (-OperatorConstants::kControllerDeadzoneThreshold <= leftY && leftY <= OperatorConstants::kControllerDeadzoneThreshold) {
     wheelMotor->Set(0.0);
   }
   else {
