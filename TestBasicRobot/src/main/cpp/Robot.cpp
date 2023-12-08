@@ -86,8 +86,10 @@ void Robot::TeleopPeriodic()
   //frc::XboxController::GetLeftY for testing purposes
   double leftY = xboxController->GetLeftY();
   // Set a threshold between -0.10 and 0.10 where the motor speed will ignore input from the controller
-  if (leftY >= -OperatorConstants::kControllerDeadzoneThreshold || leftY <= OperatorConstants::kControllerDeadzoneThreshold)
+  // -0.1 <= x <= 0.1 
+  if (-OperatorConstants::kControllerDeadzoneThreshold <= leftY || leftY <= OperatorConstants::kControllerDeadzoneThreshold) {
       wheelMotor->Set(0.0);
+  }
   double wheelSpeed = leftY / 2; // Set the wheel speed to the left Y axis value (should be between -1 - 1)
   wheelMotor->Set(wheelSpeed);
 
