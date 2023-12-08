@@ -42,7 +42,7 @@ constexpr double kMagnitudeSlewRate = 1.8;  // percent per second (1 = 100%)
 constexpr double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 constexpr rev::CANSparkMaxLowLevel::MotorType kMotorType = rev::CANSparkMaxLowLevel::MotorType::kBrushless;
 // SPARK MAX CAN IDs
-constexpr int kDrivingCanID = 0; // ID of the motor we want to spin
+constexpr int kDrivingCanID = 1; // ID of the motor we want to spin
 
 } // namespace DriveConstants
 
