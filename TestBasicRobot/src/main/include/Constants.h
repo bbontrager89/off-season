@@ -29,6 +29,8 @@ namespace OperatorConstants {
 
 constexpr int kDriverControllerCANId = 0;
 
+constexpr double kControllerDeadzoneThreshold = 0.10;
+
 } // namespace OperatorConstants
 
 namespace DriveConstants {
