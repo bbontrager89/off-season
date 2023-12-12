@@ -47,6 +47,16 @@ constexpr rev::CANSparkMaxLowLevel::MotorType kMotorType = rev::CANSparkMaxLowLe
 constexpr int kDrivingCanID = 1; // ID of the motor we want to spin
 constexpr int kAngleCanId = 3; // ID of the motor we want to spin
 
+constexpr int kFrontLeftDrivingCanId = 11;
+constexpr int kRearLeftDrivingCanId = 13;
+constexpr int kFrontRightDrivingCanId = 15;
+constexpr int kRearRightDrivingCanId = 17;
+
+constexpr int kFrontLeftTurningCanId = 10;
+constexpr int kRearLeftTurningCanId = 12;
+constexpr int kFrontRightTurningCanId = 14;
+constexpr int kRearRightTurningCanId = 16;
+
 } // namespace DriveConstants
 
 namespace ModuleConstants {
