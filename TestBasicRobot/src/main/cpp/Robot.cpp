@@ -10,13 +10,16 @@
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 #include <frc/XboxController.h>
+#include <math/Calculator.h>
 
 rev::CANSparkMax *wheelMotor;
+rev::CANSparkMax *angleMotor;
 frc::XboxController *xboxController;
 
 void Robot::RobotInit()
 {
   wheelMotor = new rev::CANSparkMax(DriveConstants::kDrivingCanID, DriveConstants::kMotorType);
+  angleMotor = new rev::CANSparkMax(DriveConstants::kAngleCanId, DriveConstants::kMotorType);
 
   xboxController = new frc::XboxController(OperatorConstants::kDriverControllerCANId);
 }
@@ -83,18 +86,62 @@ void Robot::TeleopInit()
  */
 void Robot::TeleopPeriodic()
 {
-  //frc::XboxController::GetLeftY for testing purposes
-  double leftY = xboxController->GetLeftY();
-  // Set a threshold between -0.10 and 0.10 where the motor speed will ignore input from the controller
-  // -0.1 <= x <= 0.1
-  if (-OperatorConstants::kControllerDeadzoneThreshold <= leftY && leftY <= OperatorConstants::kControllerDeadzoneThreshold) {
-    wheelMotor->Set(0.0);
+  // true for testing neo motor, false for testing swerve motor
+  bool isNeo = true;
+  if (isNeo)
+  {
+    // frc::XboxController::GetLeftY for testing purposes
+    double leftY = xboxController->GetLeftY();
+    // Set a threshold between -0.10 and 0.10 where the motor speed will ignore input from the controller
+    // -0.1 <= x <= 0.1
+    if (-OperatorConstants::kControllerDeadzoneThreshold <= leftY && leftY <= OperatorConstants::kControllerDeadzoneThreshold)
+    {
+      wheelMotor->Set(0.0);
+    }
+    else
+    {
+      double wheelSpeed = leftY / 2; // Set the wheel speed to the left Y axis value (should be between -1 - 1)
+      wheelMotor->Set(wheelSpeed);
+    }
   }
-  else {
-    double wheelSpeed = leftY / 2; // Set the wheel speed to the left Y axis value (should be between -1 - 1)
-    wheelMotor->Set(wheelSpeed);
+  else
+  {
+
+    double leftX = xboxController->GetLeftX();
+    double leftY = xboxController->GetLeftY();
+
+    // Set a threshold between -0.10 and 0.10 where the motor speed will ignore input from the controller
+    // -0.1 <= x <= 0.1
+    if (-OperatorConstants::kControllerDeadzoneThreshold <= leftY && leftY <= OperatorConstants::kControllerDeadzoneThreshold)
+    {
+      wheelMotor->Set(0.0);
+    }
+    else
+    {
+      // Calculate wheel speed based on Y-axis input for forward/backward movement
+      double forwardSpeed = leftY / 2;
+
+      if (-OperatorConstants::kControllerDeadzoneThreshold <= leftX && leftX <= OperatorConstants::kControllerDeadzoneThreshold)
+      {
+        // Do nothing, do not reset angle of wheel every time.
+      }
+      else
+      {
+        // Calculate angle change based on X-axis input for strafing
+        double angleChange = leftX * 45.0;
+
+        // Get the current angle position from the encoder
+        double currentAngle = angleMotor->GetEncoder().GetPosition();
+
+        // Calculate the target angle by adding the angle change using closestAngle function
+        double targetAngle = currentAngle + Calculator::closestAngle(currentAngle, angleChange);
+        // Set the wheel angle position
+        angleMotor->GetEncoder().SetPosition(targetAngle);
+      }
+      // sets wheel speed
+      wheelMotor->Set(forwardSpeed);
+    }
   }
-  
 }
 
 /**

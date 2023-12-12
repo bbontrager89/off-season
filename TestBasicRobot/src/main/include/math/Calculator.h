@@ -1,10 +1,10 @@
-
+// calculator.h
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 
 class Calculator {
 public:
-    double closestAngle(double a, double b);
+    static double closestAngle(double angleA, double angleB);
 };
 
 #endif
