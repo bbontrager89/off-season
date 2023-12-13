@@ -11,16 +11,54 @@
 #include <rev/CANSparkMaxLowLevel.h>
 #include <frc/XboxController.h>
 #include <math/Calculator.h>
+#include <components/SwerveDriveWheel.h>
+#include <components/SwerveDriveCoordinator.h>
 
 rev::CANSparkMax *wheelMotor;
 rev::CANSparkMax *angleMotor;
+frc::PIDController *swerveController;
+
+SwerveDriveWheel *frontLeftSwerveWheel;
+SwerveDriveWheel *frontRightSwerveWheel;
+SwerveDriveWheel *backLeftSwerveWheel;
+SwerveDriveWheel *backRightSwerveWheel;
+
+SwerveDriveCoordinator *swerveDriveCoordinator;
+
 frc::XboxController *xboxController;
+
+bool is4Motors = false;
 
 void Robot::RobotInit()
 {
   wheelMotor = new rev::CANSparkMax(DriveConstants::kDrivingCanID, DriveConstants::kMotorType);
   angleMotor = new rev::CANSparkMax(DriveConstants::kAngleCanId, DriveConstants::kMotorType);
+  swerveController = new frc::PIDController(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD);
 
+  if (is4Motors)
+  {
+    rev::CANSparkMax *frontLeftWheelMotor = new rev::CANSparkMax(DriveConstants::kFrontLeftDrivingCanId, DriveConstants::kMotorType);
+    rev::CANSparkMax *frontRightWheelMotor = new rev::CANSparkMax(DriveConstants::kFrontRightDrivingCanId, DriveConstants::kMotorType);
+    rev::CANSparkMax *backLeftWheelMotor = new rev::CANSparkMax(DriveConstants::kRearLeftDrivingCanId, DriveConstants::kMotorType);
+    rev::CANSparkMax *backRightWheelMotor = new rev::CANSparkMax(DriveConstants::kRearRightDrivingCanId, DriveConstants::kMotorType);
+
+    rev::CANSparkMax *frontLeftAngleMotor = new rev::CANSparkMax(DriveConstants::kFrontLeftTurningCanId, DriveConstants::kMotorType);
+    rev::CANSparkMax *frontRightAngleMotor = new rev::CANSparkMax(DriveConstants::kFrontRightTurningCanId, DriveConstants::kMotorType);
+    rev::CANSparkMax *backLeftAngleMotor = new rev::CANSparkMax(DriveConstants::kRearLeftTurningCanId, DriveConstants::kMotorType);
+    rev::CANSparkMax *backRightAngleMotor = new rev::CANSparkMax(DriveConstants::kRearRightTurningCanId, DriveConstants::kMotorType);
+
+    rev::SparkMaxRelativeEncoder frontLeftDirectionEncoder = frontLeftAngleMotor->GetEncoder();
+    rev::SparkMaxRelativeEncoder frontRightDirectionEncoder = frontRightAngleMotor->GetEncoder();
+    rev::SparkMaxRelativeEncoder backLeftDirectionEncoder = backLeftAngleMotor->GetEncoder();
+    rev::SparkMaxRelativeEncoder backRightDirectionEncoder = backRightAngleMotor->GetEncoder();
+
+    frontLeftSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &frontLeftDirectionEncoder, frontLeftAngleMotor, frontLeftWheelMotor);
+    frontRightSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &frontRightDirectionEncoder, frontRightAngleMotor, frontRightWheelMotor);
+    backLeftSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &backLeftDirectionEncoder, backLeftAngleMotor, backLeftWheelMotor);
+    backRightSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &backLeftDirectionEncoder, backLeftAngleMotor, backLeftWheelMotor);
+
+    swerveDriveCoordinator = new SwerveDriveCoordinator(frontLeftSwerveWheel, frontRightSwerveWheel, backLeftSwerveWheel, backRightSwerveWheel);
+  }
   xboxController = new frc::XboxController(OperatorConstants::kDriverControllerCANId);
 }
 
@@ -104,7 +142,7 @@ void Robot::TeleopPeriodic()
       wheelMotor->Set(wheelSpeed);
     }
   }
-  else
+  else if (!is4Motors && !isNeo)
   {
 
     double leftX = xboxController->GetLeftX();
@@ -121,26 +159,51 @@ void Robot::TeleopPeriodic()
       // Calculate wheel speed based on Y-axis input for forward/backward movement
       double forwardSpeed = leftY / 2;
 
-      if (-OperatorConstants::kControllerDeadzoneThreshold <= leftX && leftX <= OperatorConstants::kControllerDeadzoneThreshold)
+      double inputAngle = std::atan2(leftY, leftX);
+
+      // Get the current angle from the encoder
+      double currentAngle = angleMotor->GetEncoder().GetPosition();
+
+      // Calculate the setpoint angle and its flipped counterpart
+      double setpointAngle = Calculator::closestAngle(currentAngle, inputAngle);
+      double setpointAngleFlipped = Calculator::closestAngle(currentAngle, inputAngle + 180.0);
+
+      // Determine the closest setpoint angle and set it to the PID controller
+      if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped))
       {
-        // Do nothing, do not reset angle of wheel every time.
+        double targetAngle = currentAngle + setpointAngle;
+        swerveController->SetSetpoint(targetAngle);
+
+        double requiredSpeed = swerveController->Calculate(currentAngle);
+
+        angleMotor->Set(requiredSpeed);
       }
       else
       {
-        // Calculate angle change based on X-axis input for strafing
-        double angleChange = leftX * 45.0;
+        double targetAngle = currentAngle + setpointAngleFlipped;
+        swerveController->SetSetpoint(targetAngle);
 
-        // Get the current angle position from the encoder
-        double currentAngle = angleMotor->GetEncoder().GetPosition();
+        double requiredSpeed = swerveController->Calculate(currentAngle);
 
-        // Calculate the target angle by adding the angle change using closestAngle function
-        double targetAngle = currentAngle + Calculator::closestAngle(currentAngle, angleChange);
-        // Set the wheel angle position
-        angleMotor->GetEncoder().SetPosition(targetAngle);
+        angleMotor->Set(requiredSpeed);
       }
       // sets wheel speed
       wheelMotor->Set(forwardSpeed);
     }
+  }
+  else if (is4Motors)
+  {
+    double leftX = xboxController->GetLeftX();
+    double leftY = xboxController->GetLeftY();
+    double rightX = xboxController->GetRightX();
+
+    // Set a threshold between -0.10 and 0.10 where the motor speed will ignore input from the controller
+    // -0.1 <= x <= 0.1
+    double angle = std::atan2(leftY, leftX);
+    double magnitude = Calculator::calculateDeadzone(std::hypot(leftX, leftY));
+
+    double twist = Calculator::calculateDeadzone(rightX);
+    swerveDriveCoordinator->setSwerveDrive(angle, magnitude, twist);
   }
 }
 

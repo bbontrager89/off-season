@@ -5,6 +5,7 @@
 class Calculator {
 public:
     static double closestAngle(double angleA, double angleB);
+    static double calculateDeadzone(double value);
 };
 
 #endif

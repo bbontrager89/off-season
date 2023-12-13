@@ -1,55 +1,69 @@
-#include <frc/controller/PIDController.h>
-#include <rev/CANSparkMax.h>
-#include <rev/CANSparkMaxLowLevel.h>
-#include <math/Calculator.h>
+#include "components/SwerveDriveWheel.h"
+#include <Constants.h>
 
-class SwerveDriveWheel
+// Constructor definition
+SwerveDriveWheel::SwerveDriveWheel(double P, double I, double D, rev::SparkMaxRelativeEncoder *directionEncoder, rev::CANSparkMax *directionMotor, rev::CANSparkMax *speedMotor)
 {
-    // Declare member variables
-    frc::PIDController *directionController;       // PID Controller for direction control
-    rev::CANSparkMax *directionMotor;             // Motor controlling the wheel's direction
-    rev::CANSparkMax *speedMotor;                 // Motor controlling the wheel's speed
-    rev::SparkMaxRelativeEncoder *directionEncoder; // Encoder for measuring the wheel's direction
+    // Assigning the passed-in parameters to the corresponding member variables
+    this->directionEncoder = directionEncoder;
+    this->directionMotor = directionMotor;
+    this->speedMotor = speedMotor;
 
-public:
-    // Constructor to initialize the SwerveDriveWheel object
-    SwerveDriveWheel(double P, double I, double D, rev::SparkMaxRelativeEncoder &directionEncoder, rev::CANSparkMax &directionMotor, rev::CANSparkMax &speedMotor)
+    // Creating a new PID controller with the given PID constants
+    directionController = new frc::PIDController(P, I, D);
+}
+
+// Function to set the direction of the wheel
+void SwerveDriveWheel::setDirection(double setPoint)
+{
+    directionController->Reset(); // Reset the PID controller
+
+    // Get the current angle from the encoder
+    double currentAngle = directionEncoder->GetPosition();
+
+    // Calculate the setpoint angle and its flipped counterpart
+    double setpointAngle = Calculator::closestAngle(currentAngle, setPoint);
+    double setpointAngleFlipped = Calculator::closestAngle(currentAngle, setPoint + 180.0);
+
+    // Determine the closest setpoint angle and set it to the PID controller
+    if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped))
     {
-        // Assigning the passed-in parameters to the corresponding member variables
-        this->directionEncoder = &directionEncoder;
-        this->directionMotor = &directionMotor;
-        this->speedMotor = &speedMotor;
+        double targetAngle = currentAngle + setpointAngle;
+        directionController->SetSetpoint(targetAngle);
 
-        // Creating a new PID controller with the given PID constants
-        directionController = new frc::PIDController(P, I, D);
+        double requiredSpeed = directionController->Calculate(currentAngle);
+
+        directionMotor->Set(requiredSpeed);
     }
-
-    // Function to set the direction of the wheel
-    void setDirection(double setPoint)
+    else
     {
-        directionController->Reset(); // Reset the PID controller
+        double targetAngle = currentAngle + setpointAngleFlipped;
+        directionController->SetSetpoint(targetAngle);
 
-        // Get the current angle from the encoder
-        double currentAngle = directionEncoder->GetPosition();
+        double requiredSpeed = directionController->Calculate(currentAngle);
 
-        // Calculate the setpoint angle and its flipped counterpart
-        double setpointAngle = Calculator::closestAngle(currentAngle, setPoint);
-        double setpointAngleFlipped = Calculator::closestAngle(currentAngle, setPoint + 180.0);
-
-        // Determine the closest setpoint angle and set it to the PID controller
-        if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped))
-        {
-            directionController->SetSetpoint(currentAngle + setpointAngle);
-        }
-        else
-        {
-            directionController->SetSetpoint(currentAngle + setpointAngleFlipped);
-        }
+        directionMotor->Set(requiredSpeed);
     }
+}
 
-    // Function to set the speed of the wheel
-    void setSpeed(double speed)
+// Function to set the speed of the wheel
+void SwerveDriveWheel::setSpeed(double speed)
+{
+    double adjustedSpeed = speed;
+    if (speed > DriveConstants::kWheelMaxSpeed)
     {
-        speedMotor->Set(speed); // Set the speed of the wheel using the speed motor
+        adjustedSpeed = DriveConstants::kWheelMaxSpeed;
     }
-};
+    if (speed < -DriveConstants::kWheelMaxSpeed)
+    {
+        adjustedSpeed = -DriveConstants::kWheelMaxSpeed;
+    }
+    speedMotor->Set(adjustedSpeed); // Set the speed of the wheel using the speed motor using the max speed
+}
+
+// Destructor definition
+SwerveDriveWheel::~SwerveDriveWheel()
+{
+    // Clean up memory in the destructor
+    delete directionController;
+}

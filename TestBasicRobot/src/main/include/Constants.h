@@ -25,118 +25,130 @@
  * they are needed.
  */
 
-namespace OperatorConstants {
+namespace OperatorConstants
+{
 
-constexpr int kDriverControllerCANId = 0;
+    constexpr int kDriverControllerCANId = 0;
 
-constexpr double kControllerDeadzoneThreshold = 0.10;
+    constexpr double kControllerDeadzoneThreshold = 0.10;
 
 } // namespace OperatorConstants
 
-namespace DriveConstants {
-// Driving Parameters - Note that these are not the maximum capable speeds of
-// the robot, rather the allowed maximum speeds
-constexpr units::meters_per_second_t kMaxSpeed = 4.8_mps;
-constexpr units::radians_per_second_t kMaxAngularSpeed{2 * std::numbers::pi};
+namespace DriveConstants
+{
+    // Driving Parameters - Note that these are not the maximum capable speeds of
+    // the robot, rather the allowed maximum speeds
+    constexpr units::meters_per_second_t kMaxSpeed = 4.8_mps;
+    constexpr units::radians_per_second_t kMaxAngularSpeed{2 * std::numbers::pi};
 
-constexpr double kDirectionSlewRate = 1.2;  // radians per second
-constexpr double kMagnitudeSlewRate = 1.8;  // percent per second (1 = 100%)
-constexpr double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
-constexpr rev::CANSparkMaxLowLevel::MotorType kMotorType = rev::CANSparkMaxLowLevel::MotorType::kBrushless;
-// SPARK MAX CAN IDs
-constexpr int kDrivingCanID = 1; // ID of the motor we want to spin
-constexpr int kAngleCanId = 3; // ID of the motor we want to spin
+    constexpr double kDirectionSlewRate = 1.2;  // radians per second
+    constexpr double kMagnitudeSlewRate = 1.8;  // percent per second (1 = 100%)
+    constexpr double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    constexpr rev::CANSparkMaxLowLevel::MotorType kMotorType = rev::CANSparkMaxLowLevel::MotorType::kBrushless;
+    // SPARK MAX CAN IDs
+    constexpr int kDrivingCanID = 1; // ID of the motor we want to spin
+    constexpr int kAngleCanId = 3;   // ID of the motor we want to spin
 
-constexpr int kFrontLeftDrivingCanId = 11;
-constexpr int kRearLeftDrivingCanId = 13;
-constexpr int kFrontRightDrivingCanId = 15;
-constexpr int kRearRightDrivingCanId = 17;
+    constexpr int kFrontLeftDrivingCanId = 11;
+    constexpr int kRearLeftDrivingCanId = 13;
+    constexpr int kFrontRightDrivingCanId = 15;
+    constexpr int kRearRightDrivingCanId = 17;
 
-constexpr int kFrontLeftTurningCanId = 10;
-constexpr int kRearLeftTurningCanId = 12;
-constexpr int kFrontRightTurningCanId = 14;
-constexpr int kRearRightTurningCanId = 16;
+    constexpr int kFrontLeftTurningCanId = 10;
+    constexpr int kRearLeftTurningCanId = 12;
+    constexpr int kFrontRightTurningCanId = 14;
+    constexpr int kRearRightTurningCanId = 16;
+    // WHEEL PID
+    constexpr double kWheelP = 0.02;
+    constexpr double kWheelI = 0.001;
+    constexpr double kWheelD = 0.0;
 
+    // WHEEL MAX SPEED
+    constexpr int kWheelMaxSpeed = 0.5;
+    
 } // namespace DriveConstants
 
-namespace ModuleConstants {
-// Invert the turning encoder, since the output shaft rotates in the opposite
-// direction of the steering motor in the MAXSwerve Module.
-constexpr bool kTurningEncoderInverted = true;
+namespace ModuleConstants
+{
+    // Invert the turning encoder, since the output shaft rotates in the opposite
+    // direction of the steering motor in the MAXSwerve Module.
+    constexpr bool kTurningEncoderInverted = true;
 
-// The MAXSwerve module can be configured with one of three pinion gears: 12T,
-// 13T, or 14T. This changes the drive speed of the module (a pinion gear with
-// more teeth will result in a robot that drives faster).
-constexpr int kDrivingMotorPinionTeeth = 14;
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
+    // more teeth will result in a robot that drives faster).
+    constexpr int kDrivingMotorPinionTeeth = 14;
 
-// Calculations required for driving motor conversion factors and feed forward
-constexpr double kDrivingMotorFreeSpeedRps =
-    5676.0 / 60; // NEO free speed is 5676 RPM
-constexpr units::meter_t kWheelDiameter = 0.0762_m;
-constexpr units::meter_t kWheelCircumference =
-    kWheelDiameter * std::numbers::pi;
-// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
-// teeth on the bevel pinion
-constexpr double kDrivingMotorReduction =
-    (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-constexpr double kDriveWheelFreeSpeedRps =
-    (kDrivingMotorFreeSpeedRps * kWheelCircumference.value()) /
-    kDrivingMotorReduction;
+    // Calculations required for driving motor conversion factors and feed forward
+    constexpr double kDrivingMotorFreeSpeedRps =
+        5676.0 / 60; // NEO free speed is 5676 RPM
+    constexpr units::meter_t kWheelDiameter = 0.0762_m;
+    constexpr units::meter_t kWheelCircumference =
+        kWheelDiameter * std::numbers::pi;
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+    // teeth on the bevel pinion
+    constexpr double kDrivingMotorReduction =
+        (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+    constexpr double kDriveWheelFreeSpeedRps =
+        (kDrivingMotorFreeSpeedRps * kWheelCircumference.value()) /
+        kDrivingMotorReduction;
 
-constexpr double kDrivingEncoderPositionFactor =
-    (kWheelDiameter.value() * std::numbers::pi) /
-    kDrivingMotorReduction; // meters
-constexpr double kDrivingEncoderVelocityFactor =
-    ((kWheelDiameter.value() * std::numbers::pi) / kDrivingMotorReduction) /
-    60.0; // meters per second
+    constexpr double kDrivingEncoderPositionFactor =
+        (kWheelDiameter.value() * std::numbers::pi) /
+        kDrivingMotorReduction; // meters
+    constexpr double kDrivingEncoderVelocityFactor =
+        ((kWheelDiameter.value() * std::numbers::pi) / kDrivingMotorReduction) /
+        60.0; // meters per second
 
-constexpr double kTurningEncoderPositionFactor =
-    (2 * std::numbers::pi); // radians
-constexpr double kTurningEncoderVelocityFactor =
-    (2 * std::numbers::pi) / 60.0; // radians per second
+    constexpr double kTurningEncoderPositionFactor =
+        (2 * std::numbers::pi); // radians
+    constexpr double kTurningEncoderVelocityFactor =
+        (2 * std::numbers::pi) / 60.0; // radians per second
 
-constexpr units::radian_t kTurningEncoderPositionPIDMinInput = 0_rad;
-constexpr units::radian_t kTurningEncoderPositionPIDMaxInput =
-    units::radian_t{kTurningEncoderPositionFactor};
+    constexpr units::radian_t kTurningEncoderPositionPIDMinInput = 0_rad;
+    constexpr units::radian_t kTurningEncoderPositionPIDMaxInput =
+        units::radian_t{kTurningEncoderPositionFactor};
 
-constexpr double kDrivingP = 0.04;
-constexpr double kDrivingI = 0;
-constexpr double kDrivingD = 0;
-constexpr double kDrivingFF = (1 / kDriveWheelFreeSpeedRps);
-constexpr double kDrivingMinOutput = -1;
-constexpr double kDrivingMaxOutput = 1;
+    constexpr double kDrivingP = 0.04;
+    constexpr double kDrivingI = 0;
+    constexpr double kDrivingD = 0;
+    constexpr double kDrivingFF = (1 / kDriveWheelFreeSpeedRps);
+    constexpr double kDrivingMinOutput = -1;
+    constexpr double kDrivingMaxOutput = 1;
 
-constexpr double kTurningP = 1;
-constexpr double kTurningI = 0;
-constexpr double kTurningD = 0;
-constexpr double kTurningFF = 0;
-constexpr double kTurningMinOutput = -1;
-constexpr double kTurningMaxOutput = 1;
+    constexpr double kTurningP = 1;
+    constexpr double kTurningI = 0;
+    constexpr double kTurningD = 0;
+    constexpr double kTurningFF = 0;
+    constexpr double kTurningMinOutput = -1;
+    constexpr double kTurningMaxOutput = 1;
 
-constexpr rev::CANSparkMax::IdleMode kDrivingMotorIdleMode =
-    rev::CANSparkMax::IdleMode::kBrake;
-constexpr rev::CANSparkMax::IdleMode kTurningMotorIdleMode =
-    rev::CANSparkMax::IdleMode::kBrake;
+    constexpr rev::CANSparkMax::IdleMode kDrivingMotorIdleMode =
+        rev::CANSparkMax::IdleMode::kBrake;
+    constexpr rev::CANSparkMax::IdleMode kTurningMotorIdleMode =
+        rev::CANSparkMax::IdleMode::kBrake;
 
-constexpr units::ampere_t kDrivingMotorCurrentLimit = 50_A;
-constexpr units::ampere_t kTurningMotorCurrentLimit = 20_A;
+    constexpr units::ampere_t kDrivingMotorCurrentLimit = 50_A;
+    constexpr units::ampere_t kTurningMotorCurrentLimit = 20_A;
 } // namespace ModuleConstants
 
-namespace AutoConstants {
-constexpr auto kMaxSpeed = 3_mps;
-constexpr auto kMaxAcceleration = 3_mps_sq;
-constexpr auto kMaxAngularSpeed = 3.142_rad_per_s;
-constexpr auto kMaxAngularAcceleration = 3.142_rad_per_s_sq;
+namespace AutoConstants
+{
+    constexpr auto kMaxSpeed = 3_mps;
+    constexpr auto kMaxAcceleration = 3_mps_sq;
+    constexpr auto kMaxAngularSpeed = 3.142_rad_per_s;
+    constexpr auto kMaxAngularAcceleration = 3.142_rad_per_s_sq;
 
-constexpr double kPXController = 0.5;
-constexpr double kPYController = 0.5;
-constexpr double kPThetaController = 0.5;
+    constexpr double kPXController = 0.5;
+    constexpr double kPYController = 0.5;
+    constexpr double kPThetaController = 0.5;
 
-extern const frc::TrapezoidProfile<units::radians>::Constraints
-    kThetaControllerConstraints;
+    extern const frc::TrapezoidProfile<units::radians>::Constraints
+        kThetaControllerConstraints;
 } // namespace AutoConstants
 
-namespace OIConstants {
-constexpr int kDriverControllerPort = 0;
-constexpr double kDriveDeadband = 0.05;
+namespace OIConstants
+{
+    constexpr int kDriverControllerPort = 0;
+    constexpr double kDriveDeadband = 0.05;
 } // namespace OIConstants
