@@ -55,7 +55,7 @@ void Robot::RobotInit()
     frontLeftSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &frontLeftDirectionEncoder, frontLeftAngleMotor, frontLeftWheelMotor);
     frontRightSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &frontRightDirectionEncoder, frontRightAngleMotor, frontRightWheelMotor);
     backLeftSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &backLeftDirectionEncoder, backLeftAngleMotor, backLeftWheelMotor);
-    backRightSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &backLeftDirectionEncoder, backLeftAngleMotor, backLeftWheelMotor);
+    backRightSwerveWheel = new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD, &backRightDirectionEncoder, backRightAngleMotor, backRightWheelMotor);
 
     swerveDriveCoordinator = new SwerveDriveCoordinator(frontLeftSwerveWheel, frontRightSwerveWheel, backLeftSwerveWheel, backRightSwerveWheel);
   }
