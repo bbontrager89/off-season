@@ -27,23 +27,23 @@ RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
-  ConfigureButtonBindings();
+  // ConfigureButtonBindings();
 
   // Set up default drive command
   // The left stick controls translation of the robot.
   // Turning is controlled by the X axis of the right stick.
-  m_drive.SetDefaultCommand(frc2::RunCommand(
-      [this] {
-        m_drive.Drive(
-            -units::meters_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetLeftY(), OIConstants::kDriveDeadband)},
-            -units::meters_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetLeftX(), OIConstants::kDriveDeadband)},
-            -units::radians_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetRightX(), OIConstants::kDriveDeadband)},
-            true, true);
-      },
-      {&m_drive}));
+  /* m_drive.SetDefaultCommand(frc2::RunCommand(
+       [this] {
+         m_drive.Drive(
+             -units::meters_per_second_t{frc::ApplyDeadband(
+                 m_driverController.GetLeftY(), OIConstants::kDriveDeadband)},
+             -units::meters_per_second_t{frc::ApplyDeadband(
+                 m_driverController.GetLeftX(), OIConstants::kDriveDeadband)},
+             -units::radians_per_second_t{frc::ApplyDeadband(
+                 m_driverController.GetRightX(), OIConstants::kDriveDeadband)},
+             true, true);
+       },
+       {&m_drive}));*/
 }
 
 void RobotContainer::ConfigureButtonBindings() {

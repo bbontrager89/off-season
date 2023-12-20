@@ -46,7 +46,14 @@ constexpr double kFrontRightChassisAngularOffset = 0;
 constexpr double kRearLeftChassisAngularOffset = std::numbers::pi;
 constexpr double kRearRightChassisAngularOffset = std::numbers::pi / 2;
 
+constexpr rev::CANSparkMaxLowLevel::MotorType kMotorType =
+    rev::CANSparkMaxLowLevel::MotorType::kBrushless;
 // SPARK MAX CAN IDs
+constexpr int kDrivingCanID =
+    3;  // Driving motor is the one that will spin the wheel, neo 1650
+constexpr int kAngleCanId =
+    1;  // rotating motor is the one that will rotate the wheel, neo 550
+
 constexpr int kFrontLeftDrivingCanId = 11;
 constexpr int kRearLeftDrivingCanId = 13;
 constexpr int kFrontRightDrivingCanId = 15;
@@ -56,6 +63,13 @@ constexpr int kFrontLeftTurningCanId = 10;
 constexpr int kRearLeftTurningCanId = 12;
 constexpr int kFrontRightTurningCanId = 14;
 constexpr int kRearRightTurningCanId = 16;
+// WHEEL PID
+constexpr double kWheelP = 0.02;
+constexpr double kWheelI = 0.001;
+constexpr double kWheelD = 0.0;
+
+// WHEEL MAX SPEED
+constexpr int kWheelMaxSpeed = 0.5;
 }  // namespace DriveConstants
 
 namespace ModuleConstants {
@@ -139,3 +153,10 @@ namespace OIConstants {
 constexpr int kDriverControllerPort = 0;
 constexpr double kDriveDeadband = 0.05;
 }  // namespace OIConstants
+namespace OperatorConstants {
+
+constexpr int kDriverControllerCANId = 0;
+
+constexpr double kControllerDeadzoneThreshold = 0.10;
+
+}  // namespace OperatorConstants

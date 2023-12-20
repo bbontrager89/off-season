@@ -13,10 +13,12 @@
 #include <math/Calculator.h>
 #include <components/SwerveDriveWheel.h>
 #include <components/SwerveDriveCoordinator.h>
+#include <frc/DataLogManager.h>
 
 rev::CANSparkMax *wheelMotor;
 rev::CANSparkMax *angleMotor;
 frc::PIDController *swerveController;
+rev::SparkMaxRelativeEncoder *angleMotorEncoder;
 
 SwerveDriveWheel *frontLeftSwerveWheel;
 SwerveDriveWheel *frontRightSwerveWheel;
@@ -31,10 +33,12 @@ bool is4Motors = false;
 
 void Robot::RobotInit()
 {
+  frc::DataLogManager::Start();
   wheelMotor = new rev::CANSparkMax(DriveConstants::kDrivingCanID, DriveConstants::kMotorType);
   angleMotor = new rev::CANSparkMax(DriveConstants::kAngleCanId, DriveConstants::kMotorType);
   swerveController = new frc::PIDController(DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD);
-
+  rev::SparkMaxRelativeEncoder localEncoderVar = angleMotor->GetEncoder();
+  angleMotorEncoder = &localEncoderVar;
   if (is4Motors)
   {
     rev::CANSparkMax *frontLeftWheelMotor = new rev::CANSparkMax(DriveConstants::kFrontLeftDrivingCanId, DriveConstants::kMotorType);
@@ -125,7 +129,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
   // true for testing neo motor, false for testing swerve motor
-  bool isNeo = true;
+  bool isNeo = false;
   if (isNeo)
   {
     // frc::XboxController::GetLeftY for testing purposes
@@ -158,18 +162,17 @@ void Robot::TeleopPeriodic()
     {
       // Calculate wheel speed based on Y-axis input for forward/backward movement
       double forwardSpeed = leftY / 2;
-
       double inputAngle = std::atan2(leftY, leftX);
 
       // Get the current angle from the encoder
-      double currentAngle = angleMotor->GetEncoder().GetPosition();
+      double currentAngle = angleMotorEncoder->GetPosition();
 
       // Calculate the setpoint angle and its flipped counterpart
       double setpointAngle = Calculator::closestAngle(currentAngle, inputAngle);
       double setpointAngleFlipped = Calculator::closestAngle(currentAngle, inputAngle + 180.0);
 
       // Determine the closest setpoint angle and set it to the PID controller
-      if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped))
+      /*if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped))
       {
         double targetAngle = currentAngle + setpointAngle;
         swerveController->SetSetpoint(targetAngle);
@@ -186,7 +189,7 @@ void Robot::TeleopPeriodic()
         double requiredSpeed = swerveController->Calculate(currentAngle);
 
         angleMotor->Set(requiredSpeed);
-      }
+      }*/
       // sets wheel speed
       wheelMotor->Set(forwardSpeed);
     }

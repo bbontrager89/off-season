@@ -46,8 +46,8 @@ namespace DriveConstants
     constexpr double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
     constexpr rev::CANSparkMaxLowLevel::MotorType kMotorType = rev::CANSparkMaxLowLevel::MotorType::kBrushless;
     // SPARK MAX CAN IDs
-    constexpr int kDrivingCanID = 1; // ID of the motor we want to spin
-    constexpr int kAngleCanId = 3;   // ID of the motor we want to spin
+    constexpr int kDrivingCanID = 3; // Driving motor is the one that will spin the wheel, neo 1650
+    constexpr int kAngleCanId = 1;   // rotating motor is the one that will rotate the wheel, neo 550
 
     constexpr int kFrontLeftDrivingCanId = 11;
     constexpr int kRearLeftDrivingCanId = 13;
