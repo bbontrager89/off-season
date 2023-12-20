@@ -19,7 +19,7 @@ rev::CANSparkMax *wheelMotor = new rev::CANSparkMax(
     DriveConstants::kDrivingCanID, DriveConstants::kMotorType);
 rev::CANSparkMax *angleMotor = new rev::CANSparkMax(DriveConstants::kAngleCanId,
                                                     DriveConstants::kMotorType);
-frc::PIDController *swerveController = new frc::PIDController(
+frc::PIDController *swerveController = new frc2::PIDController(
     DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD);
 rev::SparkMaxRelativeEncoder angleMotorEncoder = angleMotor->GetEncoder();
 
@@ -54,31 +54,18 @@ void Robot::RobotInit() {
     rev::CANSparkMax *backRightAngleMotor = new rev::CANSparkMax(
         DriveConstants::kRearRightTurningCanId, DriveConstants::kMotorType);
 
-    rev::SparkMaxRelativeEncoder frontLeftDirectionEncoder =
-        frontLeftAngleMotor->GetEncoder();
-    rev::SparkMaxRelativeEncoder frontRightDirectionEncoder =
-        frontRightAngleMotor->GetEncoder();
-    rev::SparkMaxRelativeEncoder backLeftDirectionEncoder =
-        backLeftAngleMotor->GetEncoder();
-    rev::SparkMaxRelativeEncoder backRightDirectionEncoder =
-        backRightAngleMotor->GetEncoder();
-
     frontLeftSwerveWheel = new SwerveDriveWheel(
         DriveConstants::kWheelP, DriveConstants::kWheelI,
-        DriveConstants::kWheelD, &frontLeftDirectionEncoder,
-        frontLeftAngleMotor, frontLeftWheelMotor);
+        DriveConstants::kWheelD, frontLeftAngleMotor, frontLeftWheelMotor);
     frontRightSwerveWheel = new SwerveDriveWheel(
         DriveConstants::kWheelP, DriveConstants::kWheelI,
-        DriveConstants::kWheelD, &frontRightDirectionEncoder,
-        frontRightAngleMotor, frontRightWheelMotor);
-    backLeftSwerveWheel =
-        new SwerveDriveWheel(DriveConstants::kWheelP, DriveConstants::kWheelI,
-                             DriveConstants::kWheelD, &backLeftDirectionEncoder,
-                             backLeftAngleMotor, backLeftWheelMotor);
+        DriveConstants::kWheelD, frontRightAngleMotor, frontRightWheelMotor);
+    backLeftSwerveWheel = new SwerveDriveWheel(
+        DriveConstants::kWheelP, DriveConstants::kWheelI,
+        DriveConstants::kWheelD, backLeftAngleMotor, backLeftWheelMotor);
     backRightSwerveWheel = new SwerveDriveWheel(
         DriveConstants::kWheelP, DriveConstants::kWheelI,
-        DriveConstants::kWheelD, &backRightDirectionEncoder,
-        backRightAngleMotor, backRightWheelMotor);
+        DriveConstants::kWheelD, backRightAngleMotor, backRightWheelMotor);
 
     swerveDriveCoordinator =
         new SwerveDriveCoordinator(frontLeftSwerveWheel, frontRightSwerveWheel,
@@ -139,11 +126,24 @@ void Robot::TeleopPeriodic() {
   if (!is4Motors) {
     double leftX = xboxController->GetLeftX();
     double leftY = xboxController->GetLeftY();
-    // Calculate wheel speed based on Y-axis input for forward/backward
-    // movement
-    double forwardSpeed = leftY / 2;
-    double inputAngle = std::atan2(leftY, Calculator::calculateDeadzone(leftX));
 
+    // Calculate deadzone for both X and Y
+    leftX = Calculator::calculateDeadzone(leftX);
+    leftY = Calculator::calculateDeadzone(leftY);
+
+    // if both of X and Y are equal to zero, stop both motors and return.
+    if (leftX == 0.0 && leftY == 0.0) {
+      wheelMotor->Set(0.0);
+      angleMotor->Set(0.0);
+      return;
+    }
+    // Calculate wheel speed based on Y-axis input for forward/backward,
+    // movement (MULTIPLY DO NOT DIVIDE)
+    double forwardSpeed = leftY * 0.5;
+    // calculates input angle from 2 given points
+    double inputAngleRadians = std::atan2(leftY, leftX);
+    // input angle degrees
+    double inputAngle = inputAngleRadians * 180.0 / M_PI;
     // Get the current angle from the encoder
     double currentAngle = angleMotorEncoder.GetPosition();
 
