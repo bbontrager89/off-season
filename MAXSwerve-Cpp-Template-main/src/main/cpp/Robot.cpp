@@ -15,15 +15,13 @@
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 
-#include <iostream>
-
 rev::CANSparkMax *wheelMotor = new rev::CANSparkMax(
     DriveConstants::kDrivingCanID, DriveConstants::kMotorType);
 rev::CANSparkMax *angleMotor = new rev::CANSparkMax(DriveConstants::kAngleCanId,
                                                     DriveConstants::kMotorType);
-frc2::PIDController *swerveController = new frc2::PIDController(
+frc::PIDController *swerveController = new frc2::PIDController(
     DriveConstants::kWheelP, DriveConstants::kWheelI, DriveConstants::kWheelD);
-rev::SparkMaxAbsoluteEncoder angleMotorEncoder = angleMotor->GetAbsoluteEncoder(rev::SparkMaxAbsoluteEncoder::Type::kDutyCycle);
+rev::SparkMaxRelativeEncoder angleMotorEncoder = angleMotor->GetEncoder();
 
 SwerveDriveWheel *frontLeftSwerveWheel;
 SwerveDriveWheel *frontRightSwerveWheel;
@@ -140,7 +138,7 @@ void Robot::TeleopPeriodic() {
       return;
     }
     // Calculate wheel speed based on Y-axis input for forward/backward,
-    // movement (MULTIPLY DO NOT DIVIDE, can lead to division by zero error!)
+    // movement (MULTIPLY DO NOT DIVIDE)
     double forwardSpeed = leftY * 0.5;
     // calculates input angle from 2 given points
     double inputAngleRadians = std::atan2(leftY, leftX);
@@ -160,15 +158,15 @@ void Robot::TeleopPeriodic() {
 
       double requiredSpeed =
           swerveController->Calculate(currentAngle, targetAngle);
-      std::cout << "Calculation output: " << requiredSpeed;
-      angleMotor->Set(leftX);
+
+      angleMotor->Set(requiredSpeed);
     } else {
       double targetAngle = currentAngle + setpointAngleFlipped;
 
       double requiredSpeed =
           swerveController->Calculate(currentAngle, targetAngle);
-      std::cout << "Calculation output: " << requiredSpeed;
-      angleMotor->Set(leftX);
+
+      angleMotor->Set(requiredSpeed);
     }
     // sets wheel speed
     wheelMotor->Set(forwardSpeed);

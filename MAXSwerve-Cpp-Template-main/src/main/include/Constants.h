@@ -64,9 +64,9 @@ constexpr int kRearLeftTurningCanId = 12;
 constexpr int kFrontRightTurningCanId = 14;
 constexpr int kRearRightTurningCanId = 16;
 // WHEEL PID
-constexpr double kWheelP = 0.1;
-constexpr double kWheelI = 0.1;
-constexpr double kWheelD = 0.1;
+constexpr double kWheelP = 0.01;
+constexpr double kWheelI = 0.0;
+constexpr double kWheelD = 0.0;
 
 // WHEEL MAX SPEED
 constexpr int kWheelMaxSpeed = 0.5;
