@@ -24,7 +24,7 @@ double Calculator::closestAngle(double angleA, double angleB)
     return angleDifference;
 }
 
-double Calculator::calculateDeadzone(double value)
+double calculateDeadzone(double value)
 {
     if (std::abs(value) < OperatorConstants::kControllerDeadzoneThreshold)
     {
