@@ -8,7 +8,7 @@
 # Installation Process
 
 ## Install Limelight to Power Distribution System
-Reference: (Limelight Wiring Guide)[https://docs.limelightvision.io/docs/docs-limelight/getting-started/wiring]
+Reference: [Limelight Wiring Guide](https://docs.limelightvision.io/docs/docs-limelight/getting-started/wiring)
 ### Install Limelight to PDP 
 1. Use a power slot between 4-11 to power the limelight. With the power off, plug 20 gauge wires into the limelight and then plug the limelight into one of the open low-amp fuse slots
 2. Test power to limelight by turning on the power circuit. The limelight should emit a bright green light and strobe softly until it turns off. 
