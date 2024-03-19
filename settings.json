@@ -1,0 +1,26 @@
+{
+  "C_Cpp.formatting": "vcFormat",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.namespace": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "sameLine",
+  "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyFunction": true,
+  "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": true,
+  "C_Cpp.vcFormat.newLine.scopeBracesOnSeparateLines": true,
+  "C_Cpp.vcFormat.space.insertAfterSemicolon": true,
+  "C_Cpp.vcFormat.wrap.preserveBlocks": "never",
+  "java.jdt.ls.java.home": "C:\\Users\\Public\\wpilib\\2024\\jdk",
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "extensions.ignoreRecommendations": true,
+  "update.mode": "none",
+  "update.showReleaseNotes": false,
+  "http.systemCertificates": false,
+  "java.completion.matchCase": "off",
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "C:\\Users\\Public\\wpilib\\2024\\jdk",
+    "PATH": "C:\\Users\\Public\\wpilib\\2024\\jdk\\bin;${env:PATH}"
+  },
+  "git.confirmSync": false,
+  "git.autofetch": true
+}
