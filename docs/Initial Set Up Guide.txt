@@ -1,0 +1,46 @@
+1. Download wpilib from [1]
+
+
+2. Run the Installer, click more info, run anyway
+	1. Click Start
+	2. Install Everything for all users
+	3. Download for this computer only
+	4. When prompted, allow the app to make changes to your device, select yes
+	5. Press finish
+
+
+
+
+
+refs
+[1](WPILib Installation Guide)
+https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html
+
+
+
+git setup guide
+1. set up an ssh key
+	https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+	a. open powershell window
+	b. ssh-keygen -t ed25519 -C "your_email@example.com"
+	c. leave blank and hit enter
+	d. leave black and enter 2x
+	e. copy the public key (`cat C:\users\(username)\.ssh\(keyfile).pub`)
+	f. go to github account and add new ssh key by pasting the public key in (Title "Name Client" ex.Brady FRC9430-001)
+
+2. Clone repo with ssh
+
+	a. Copy ssh url from the desired repository
+	b. Open up powershell
+	c. Change to git working directories cd c:\git\frc
+	d. Type "git clone [ssh URL]", hit enter (if there's an error that means there was failed authorization or URL not found)
+	
+3. Open up WPILIB
+	a. Open folder
+	b. Navigate to frc open directory, open project
+	c. When prompted for an update say no
+
+
+NOTES:
+ Pre-requistes: Have file structure set up for git
+		Have the git CLI installed or use git desktop
